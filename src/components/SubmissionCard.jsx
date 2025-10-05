@@ -1,6 +1,6 @@
 const SubmissionCard = ({ submission, status }) => {
   const isPending = status === 'pending';
-  const displayedRole = submission.role || submission.email;
+
   return (
     <div style={{
       background: 'white',
@@ -44,6 +44,7 @@ const SubmissionCard = ({ submission, status }) => {
           </>
         )}
       </div>
+
       <div style={{ marginTop: '8px' }}>
         <div style={{ marginBottom: '12px' }}>
           <div style={{
@@ -62,6 +63,7 @@ const SubmissionCard = ({ submission, status }) => {
             {submission.name}
           </div>
         </div>
+
         <div style={{ marginBottom: '12px' }}>
           <div style={{
             fontSize: '12px',
@@ -75,27 +77,10 @@ const SubmissionCard = ({ submission, status }) => {
             fontSize: '14px',
             color: '#333'
           }}>
-            {displayedRole}
+            {submission.role || submission.email}
           </div>
         </div>
-        {displayedRole === 'Head of Family' && submission.family_id && (
-          <div style={{ marginBottom: '12px' }}>
-            <div style={{
-              fontSize: '12px',
-              color: '#666',
-              fontWeight: '600',
-              marginBottom: '4px'
-            }}>
-              FAMILY ID
-            </div>
-            <div style={{
-              fontSize: '14px',
-              color: '#333'
-            }}>
-              {submission.family_id}
-            </div>
-          </div>
-        )}
+
         {submission.phone && (
           <div style={{ marginBottom: '12px' }}>
             <div style={{
@@ -114,6 +99,7 @@ const SubmissionCard = ({ submission, status }) => {
             </div>
           </div>
         )}
+
         {submission.address && (
           <div style={{ marginBottom: '12px' }}>
             <div style={{
@@ -132,6 +118,7 @@ const SubmissionCard = ({ submission, status }) => {
             </div>
           </div>
         )}
+
         {submission.message && (
           <div style={{ marginBottom: '12px' }}>
             <div style={{
@@ -150,6 +137,7 @@ const SubmissionCard = ({ submission, status }) => {
             </div>
           </div>
         )}
+
         <div style={{
           fontSize: '11px',
           color: '#999',
@@ -163,4 +151,5 @@ const SubmissionCard = ({ submission, status }) => {
     </div>
   );
 };
+
 export default SubmissionCard;
