@@ -8,7 +8,7 @@ import { saveToQueue, getQueue, removeFromQueue } from '../utils/offlineQueue';
 const VoiceForm = () => {
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
+    role: '',
     phone: '',
     address: '',
     message: ''
@@ -42,9 +42,19 @@ const VoiceForm = () => {
     for (const submission of pending) {
       try {
         const { tempId, ...submissionData } = submission;
+        // Map role to email to match existing DB schema
+        const payload = {
+          name: submissionData.name,
+          email: submissionData.role || submissionData.email || '',
+          phone: submissionData.phone,
+          address: submissionData.address,
+          message: submissionData.message,
+          created_at: submissionData.created_at
+        };
+
         const { data, error } = await supabase
           .from('form_submissions')
-          .insert([submissionData])
+          .insert([payload])
           .select();
 
         if (!error && data) {
@@ -73,9 +83,20 @@ const VoiceForm = () => {
 
     try {
       if (isOnline) {
+        // The backend table currently expects an `email` column.
+        // Map the selected `role` into the `email` field so inserts succeed
+        // without changing the existing database schema.
+        const payload = {
+          name: formData.name,
+          email: formData.role,
+          phone: formData.phone,
+          address: formData.address,
+          message: formData.message
+        };
+
         const { data, error } = await supabase
           .from('form_submissions')
-          .insert([formData])
+          .insert([payload])
           .select();
 
         if (error) throw error;
@@ -90,7 +111,7 @@ const VoiceForm = () => {
 
       setFormData({
         name: '',
-        email: '',
+        role: '',
         phone: '',
         address: '',
         message: ''
@@ -158,14 +179,17 @@ const VoiceForm = () => {
 
           <div className="form-field">
             <label className="form-label">
-              Email / ईमेल / ਈਮੇਲ *
+              Role (Head of Family / Patient) *
             </label>
-            <VoiceInput
-              value={formData.email}
-              onChange={(value) => handleInputChange('email', value)}
-              placeholder="Enter your email"
-              language={language}
-            />
+            <select
+              value={formData.role}
+              onChange={(e) => handleInputChange('role', e.target.value)}
+              className="language-select"
+            >
+              <option value="">Select role</option>
+              <option value="Head of Family">Head of Family</option>
+              <option value="Patient">Patient</option>
+            </select>
           </div>
 
           <div className="form-field">
@@ -206,8 +230,8 @@ const VoiceForm = () => {
 
           <button
             type="submit"
-            disabled={isSubmitting || !formData.name || !formData.email}
-            className={`submit-button ${(isSubmitting || !formData.name || !formData.email) ? 'disabled' : ''}`}
+            disabled={isSubmitting || !formData.name || !formData.role}
+            className={`submit-button ${(isSubmitting || !formData.name || !formData.role) ? 'disabled' : ''}`}
           >
             {isSubmitting ? 'Submitting...' : 'Submit Form'}
           </button>

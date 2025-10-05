@@ -71,13 +71,13 @@ const SubmissionCard = ({ submission, status }) => {
             fontWeight: '600',
             marginBottom: '4px'
           }}>
-            EMAIL
+            ROLE
           </div>
           <div style={{
             fontSize: '14px',
             color: '#333'
           }}>
-            {submission.email}
+            {submission.role || submission.email}
           </div>
         </div>
 
